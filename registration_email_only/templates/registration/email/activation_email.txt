@@ -1,0 +1,2 @@
+{% load url from future %}
+Activate your account by going to following url: {% url 'registration_activate' activation_key %}

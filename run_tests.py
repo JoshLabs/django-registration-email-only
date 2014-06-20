@@ -8,6 +8,7 @@ from django.core.management import call_command
 
 import registration_email_only
 
+
 def main():
     # Dynamically configure the Django settings with the minimum necessary to
     # get Django running tests
@@ -29,14 +30,14 @@ def main():
             }
         },
         MEDIA_ROOT = '/tmp/django_test_media/',
-        ROOT_URLCONF = '',
+        ROOT_URLCONF = 'registration_email_only.backends.urls',
         DEBUG = True,
-		TEMPLATE_DEBUG = True,
-		TEMPLATE_DIRS = [
-		    os.path.join(os.path.dirname(registration_email_only.__file__), 'tests/templates')
-		],
-    ) 
-    
+        TEMPLATE_DEBUG = True,
+        TEMPLATE_DIRS = [
+            os.path.join(os.path.dirname(registration_email_only.__file__), 'templates')
+        ],
+    )
+
     #call_command('syncdb')
     
     # Fire off the tests
