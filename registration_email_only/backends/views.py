@@ -1,5 +1,6 @@
 from django.contrib.auth import authenticate, login
 from django.core.urlresolvers import reverse
+from django.http import Http404
 from django.views.generic import FormView
 from registration.signals import user_registered
 from registration.backends.default.views import RegistrationView
@@ -52,9 +53,8 @@ class ActivateView(FormView):
 
     def dispatch(self, request, *args, **kwargs):
         user = activation_key_to_user(kwargs.get('activation_key'))
-        if user and user.has_usable_password():
-            kwargs.update({'site': get_site(request)})
-            return self.render_to_response(self.get_context_data(**kwargs))
+        if not user:
+            raise Http404()
         else:
             return super(ActivateView, self).dispatch(request, *args, **kwargs)
 
