@@ -21,7 +21,7 @@ class ActivationForm(forms.Form):
                                 error_message=_("This value must contain only letters, numbers and underscores."))
     password = forms.CharField(widget=forms.PasswordInput(render_value=False), label=_("Password"))
     activation_key = forms.CharField(widget=forms.HiddenInput())
-    next = forms.URLField(required=False, widget=forms.HiddenInput())
+    next = forms.CharField(required=False, widget=forms.HiddenInput())
 
     def clean_username(self):
         """ Ensure that the supplied username is unique. """
