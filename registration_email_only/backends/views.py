@@ -2,6 +2,7 @@ from django.contrib.auth import authenticate, login
 from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.views.generic import FormView
+from django.template.context import RequestContext
 from registration.signals import user_registered
 from registration.backends.default.views import RegistrationView
 from registration_email_only.forms import ActivationForm, RegistrationForm
@@ -34,7 +35,8 @@ class RegisterView(RegistrationView):
         user.save()
         # get site
         site = get_site(request)
-        send_activation_email(user, site)
+        context = RequestContext(request, {'user' : user})
+        send_activation_email(user, site, extra_context=context)
         user_registered.send(
             sender=self.__class__,
             user=user,

@@ -8,6 +8,7 @@ from django.core.exceptions import ImproperlyConfigured
 from django.contrib.auth.tokens import default_token_generator as token_generator
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
+from django.template.context import Context
 
 import pyDes
 
@@ -63,7 +64,8 @@ def get_username_creator():
     return create_username
 
 
-def send_activation_email(user, site=None, activation_key=None, template_name='registration/email/activation_email'):
+def send_activation_email(user, site=None, activation_key=None, template_name='registration/email/activation_email',
+                          extra_context={}):
     """
     Send an activation email to the provided User.
 
@@ -101,10 +103,11 @@ def send_activation_email(user, site=None, activation_key=None, template_name='r
     # generate activation key
     if not activation_key:
         activation_key = user_to_activation_key(user)
-    ctx_dict = {'activation_key': activation_key,
-                'site': site}
+    context = Context({'activation_key': activation_key,
+                'site': site})
+    context.update(extra_context)
     subject = render_to_string('registration/email/activation_email_subject.txt',
-                               ctx_dict)
+                               context)
     # Email subject *must not* contain newlines
     subject = ''.join(subject.splitlines())
 
@@ -112,7 +115,7 @@ def send_activation_email(user, site=None, activation_key=None, template_name='r
         subject=subject,
         body=render_to_string(
             "{}.txt".format(template_name),
-            ctx_dict
+            context
         ),
         from_email=settings.DEFAULT_FROM_EMAIL,
         to=[user.email],
@@ -120,7 +123,7 @@ def send_activation_email(user, site=None, activation_key=None, template_name='r
             (
                 render_to_string(
                     "{}.html".format(template_name),
-                    ctx_dict
+                    context
                 ),
                 'text/html'
             ),
