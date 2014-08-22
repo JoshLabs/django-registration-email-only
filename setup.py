@@ -23,7 +23,7 @@ for dirpath, dirnames, filenames in os.walk('registration_email_only'):
 
 setup(
     name='django-registration-email-only',
-    version='0.1.1',
+    version='0.1.2',
     author='Gabriel Grant',
     author_email='g@briel.ca',
     packages=packages,

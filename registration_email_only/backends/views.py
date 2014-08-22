@@ -33,6 +33,7 @@ class RegisterView(RegistrationView):
         login(request, auth_user)
         user.set_unusable_password()
         user.save()
+        request.user = user  # assign the created user and not the logged in user (this has a temporary password for login)
         # get site
         site = get_site(request)
         context = RequestContext(request, {'user' : user})
